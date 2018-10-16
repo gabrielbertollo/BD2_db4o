@@ -22,24 +22,24 @@ public class Main {
 		System.out.println("O objeto foi inserido");
 		
 		//UPDATE no BD:
-		e.setCod(1);
-		result = db.get(e);
-		achou_e = (Empresa) result.next();
-		achou_e.setCod(2);
+		e.setCod(1); //Instanciando o objeto com codigo 1
+		result = db.queryByExample(e); //Recupera o objeto e do Banco
+		achou_e = (Empresa) result.next(); //Atribui o objeto recuperado para achou_e
+		achou_e.setCod(2); 
 		achou_e.setNome("Linux");
 		achou_e.setDescricao("Better Computing Company");
 		db.store(achou_e);
 		System.out.println("O objeto foi atualizado");
 		
 		//SELECT no BD:
-		e.setCod(1);
-		result = db.get(e);
+		e.setCod(2);
+		result = db.queryByExample(e);
 		achou_e = (Empresa) result.next();
 		System.out.println(achou_e.getNome());
 		
 		//DELETE no BD:
 		e.setCod(1);
-		result = db.get(e);
+		result = db.queryByExample(e);
 		achou_e = (Empresa) result.next();
 		db.delete(achou_e);
 		System.out.println("O objeto foi apagado");

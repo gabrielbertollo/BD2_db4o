@@ -1,50 +1,65 @@
 package principal;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.ListResourceBundle;
+
 import com.db4o.*;
+import com.db4o.defragment.Defragment;
+import com.db4o.defragment.DefragmentConfig;
+import com.db4o.query.Predicate;
 
 public class Main {
 
 	public static void main(String[] args) {
 		//Variavel do arquivo do BD:
-		ObjectContainer db = Db4o.openFile("Banco.dbo"); //Antigo: .yap
-		//Criando um Objeto do tipo Empresa:
-		Empresa e = new Empresa();
-		//Objeto do tipo Empresa para obter o objeto consultado:
-		Empresa achou_e;
+		ObjectContainer db = Db4o.openFile("Db.dbo");
+		//Criando Objetos do tipo Empresa:
+		Empresa e = new Empresa(1, "IBM", "Best Place to Work");
+		Empresa e2 = new Empresa(2, "Microsoft", "THE Best Place to Work");
 		//Variavel para obter o resultado:
 		ObjectSet result;
+	
 		
 		//INSERT no BD:
-		e.setCod(1);
-		e.setNome("IBM");
-		e.setDescricao("Computing Company");
 		db.store(e); //Tutorial apresentava .set
-		System.out.println("O objeto foi inserido");
+		System.out.println("A empresa foi inserida");
+		//Segunda empresa:
+		db.store(e2);
+		System.out.println("A segunda empresa foi inserida");
 		
-		//UPDATE no BD:
-		e.setCod(1); //Instanciando o objeto com codigo 1
-		result = db.queryByExample(e); //Recupera o objeto e do Banco
-		achou_e = (Empresa) result.next(); //Atribui o objeto recuperado para achou_e
-		achou_e.setCod(2); 
-		achou_e.setNome("Linux");
-		achou_e.setDescricao("Better Computing Company");
-		db.store(achou_e);
-		System.out.println("O objeto foi atualizado");
 		
-		//SELECT no BD:
-		e.setCod(2);
-		result = db.queryByExample(e);
-		achou_e = (Empresa) result.next();
-		System.out.println(achou_e.getNome());
+		//QBE:
+		Empresa consulta = new Empresa(0, null, null);
+		result = db.queryByExample(consulta);
+		consulta.listResult(result);
 		
-		//DELETE no BD:
-		e.setCod(1);
-		result = db.queryByExample(e);
-		achou_e = (Empresa) result.next();
-		db.delete(achou_e);
-		System.out.println("O objeto foi apagado");
 		
+		/*
+		//NQ:
+		List<Empresa> empresas = db.query(new Predicate<Empresa>() {
+			public boolean match(Empresa empresa) {
+				return empresa.getNome() == "IBM";
+			}
+		});
+		System.out.println(empresas);
+		*/
+		
+		
+		
+		db.commit();
 		db.close();
+		
+		/*
+		try {
+			Defragment.defrag("Db.dbo");
+			System.out.println("Desfragmentei.");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
+		
 	}
 
 }

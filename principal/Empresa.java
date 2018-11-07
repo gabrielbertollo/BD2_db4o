@@ -1,10 +1,29 @@
 package principal;
 
+import java.util.List;
+
 public class Empresa {
 	
 	private int cod;
 	private String nome;
 	private String descricao;
+	
+	
+	public Empresa(int cod, String nome, String descricao) {
+		super();
+		this.cod = cod;
+		this.nome = nome;
+		this.descricao = descricao;
+	}
+
+
+	public static void listResult(List<?> result) {
+		System.out.println(result.size());
+		for (Object o : result) {
+			System.out.println(o);
+		}
+	}
+	
 	
 	public int getCod() {
 		return cod;
